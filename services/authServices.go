@@ -48,4 +48,8 @@ func SendEmail() {
 
 // forgot password
 
+func ForgotPassword(email string) {
+
+}
+
 // reset password
