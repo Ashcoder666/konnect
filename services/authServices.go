@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ashcoder666/konnect/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // create user
@@ -22,6 +23,28 @@ func CreateUserService(user *models.User) error {
 }
 
 // login user
+
+func CheckUserExists(emailorusername string) (*models.User, error) {
+	var user *models.User
+	err := models.DB.Where("email = ? OR user_name = ?", emailorusername, emailorusername).First(&user).Error
+	if err != nil {
+		return nil, err
+	} else {
+		return user, nil
+	}
+}
+
+func ComparePassword(inputPassword, cryptPassword string) error {
+	if err := bcrypt.CompareHashAndPassword([]byte(cryptPassword), []byte(inputPassword)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func SendEmail() {
+
+}
 
 // forgot password
 
