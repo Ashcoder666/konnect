@@ -7,6 +7,7 @@ import (
 	"github.com/ashcoder666/konnect/models"
 	"github.com/ashcoder666/konnect/services"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func UserRegistration(c *gin.Context) {
@@ -21,6 +22,10 @@ func UserRegistration(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "All fields need to be send"})
 		return
 	}
+
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+
+	user.Password = string(hashedPassword)
 
 	fmt.Println(user)
 
