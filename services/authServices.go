@@ -119,3 +119,25 @@ func ResetPassword(email, newPassword string, OTP int) error {
 	return nil
 
 }
+
+// partner registartion
+
+func RegisterPartnerService(partner *models.Partner) error {
+	if err := models.DB.Create(&partner).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// partner login
+
+func PartnerExistCheckService(email string) (models.Partner, error) {
+	var partnerInstance models.Partner
+
+	if err := models.DB.Where("email = ?", email).First(&partnerInstance); err != nil {
+		return models.Partner{}, err.Error
+	}
+
+	return partnerInstance, nil
+}

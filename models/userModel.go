@@ -20,8 +20,8 @@ type User struct {
 type UserRole string
 
 const (
-	Customer UserRole = "customer"
-	Partner  UserRole = "partner"
+	Customer  UserRole = "customer"
+	Copartner UserRole = "partner"
 )
 
 func IsDuplicateKeyError(err error) bool {
