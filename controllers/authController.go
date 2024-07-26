@@ -82,3 +82,63 @@ func UserLogin(c *gin.Context) {
 	c.JSON(http.StatusAccepted, gin.H{"message": "success", "Token": token})
 
 }
+
+func UserForgotPassword(c *gin.Context) {
+	type ForgotSchema struct {
+		Email string `json:"email"`
+	}
+
+	var forgotEmail ForgotSchema
+
+	if err := c.BindJSON(&forgotEmail); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"Error": "Bad request"})
+		return
+	}
+
+	selectedUser, err := services.CheckUserExists(forgotEmail.Email)
+
+	fmt.Println(selectedUser)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "user doesnt exist"})
+		return
+	}
+
+	if err := services.SendEmail(forgotEmail.Email, "hi", "hiiii"); err != nil {
+
+		c.JSON(http.StatusInternalServerError, gin.H{"Error": "email service is down"})
+		return
+	}
+
+	resetOTP := services.ForgotPassword(selectedUser.Email)
+
+	c.JSON(http.StatusAccepted, gin.H{"Message": "Success", "OTP": resetOTP})
+}
+
+func UserResetPassword(c *gin.Context) {
+
+	type ResetInstance struct {
+		Email       string `json:"email"`
+		OTP         int    `json:"otp"`
+		NewPassword string `json:"new_password"`
+	}
+
+	var resetInstance ResetInstance
+
+	if err := c.BindJSON(&resetInstance); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"Error": "Bad resquest"})
+		return
+	}
+	if resetInstance.Email == "" || resetInstance.NewPassword == "" || resetInstance.OTP == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing required fields"})
+		return
+	}
+
+	if err := services.ResetPassword(resetInstance.Email, resetInstance.NewPassword, resetInstance.OTP); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"Error": "Internal Server Error"})
+		return
+	}
+
+	c.JSON(http.StatusAccepted, gin.H{"Message": "Password updated succesfully"})
+
+}

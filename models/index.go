@@ -24,7 +24,7 @@ func ConnectDatabase() {
 		panic(err)
 	}
 
-	err = database.AutoMigrate(&User{})
+	err = database.AutoMigrate(&User{}, &Tempotps{})
 
 	if err != nil {
 		panic(err)

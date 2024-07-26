@@ -2,8 +2,11 @@ package services
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/ashcoder666/konnect/models"
+	"github.com/ashcoder666/konnect/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -42,14 +45,77 @@ func ComparePassword(inputPassword, cryptPassword string) error {
 	return nil
 }
 
-func SendEmail() {
+func SendEmail(to, subject, body string) error {
+	if err := utils.SendMail(to, subject, body); err != nil {
+		return err
+	}
 
+	return nil
 }
 
 // forgot password
 
-func ForgotPassword(email string) {
+func ForgotPassword(email string) int {
+	// return otp and save in db
 
+	rand.Seed(time.Now().UnixNano())
+
+	// Generate a random integer between 0 and 99
+	randomInt := rand.Intn(9999)
+	newOtpInstance := models.Tempotps{
+		Email: email, OTP: randomInt, Status: true,
+	}
+
+	if err := models.DB.Create(&newOtpInstance); err != nil {
+		fmt.Println(err)
+	}
+
+	return randomInt
 }
 
 // reset password
+
+func ResetPassword(email, newPassword string, OTP int) error {
+	var otpInstance models.Tempotps
+	var user models.User
+
+	// get otp & check if its correcr
+
+	err := models.DB.Where("email = ? AND status = true AND otp = ?", email, OTP).First(&otpInstance).Error
+
+	if err != nil {
+		return err
+	}
+
+	// delete record
+	res := models.DB.Where("email = ? AND status = true AND otp = ?", email, OTP).Delete(&otpInstance)
+
+	if res.Error != nil {
+		fmt.Println("hryyyyyyyyyyyyyyyy")
+		return res.Error
+	}
+	// update new password
+
+	fmt.Println("line no 96")
+
+	if err := models.DB.Where("email = ?", email).First(&user).Error; err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	fmt.Println("line no 105")
+	fmt.Println(user)
+
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+
+	user.Password = string(hashedPassword)
+
+	if err := models.DB.Save(&user); err != nil {
+		return err.Error
+	}
+
+	fmt.Println("line no 116")
+
+	return nil
+
+}
