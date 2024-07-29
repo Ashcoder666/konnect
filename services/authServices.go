@@ -91,7 +91,6 @@ func ResetPassword(email, newPassword string, OTP int) error {
 	res := models.DB.Where("email = ? AND status = true AND otp = ?", email, OTP).Delete(&otpInstance)
 
 	if res.Error != nil {
-		fmt.Println("hryyyyyyyyyyyyyyyy")
 		return res.Error
 	}
 	// update new password

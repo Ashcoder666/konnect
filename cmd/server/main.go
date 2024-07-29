@@ -23,6 +23,7 @@ func main() {
 	H := gin.Default()
 	// err := connectDB()
 	routes.AuthRoutes(H)
+	routes.UserRoutes(H)
 
 	models.ConnectDatabase()
 	fmt.Println("Successfully connected to the database")
