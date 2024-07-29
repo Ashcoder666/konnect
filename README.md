@@ -20,7 +20,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 //partner register and onboarding -done
 //login partner - pending
 //buy coin for user
-//show list of partners who are online -
+//show list of partners who are online - done
 // turn on and off the socket online status for partner
 // text the partner and receive - socket 
 // call the partner if have enoiugh coins - webrtc
