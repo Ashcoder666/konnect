@@ -142,3 +142,24 @@ func UserResetPassword(c *gin.Context) {
 	c.JSON(http.StatusAccepted, gin.H{"Message": "Password updated succesfully"})
 
 }
+
+func RegisterPartnerController(c *gin.Context) {
+	var partnerInstance models.Partner
+
+	if err := c.BindJSON(&partnerInstance); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid format"})
+	}
+
+	fmt.Println(partnerInstance)
+
+	if err := services.RegisterPartnerService(&partnerInstance); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"Error": "internal error"})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"Message": "success"})
+}
+
+func LoginPartnerController(c *gin.Context) {
+
+}

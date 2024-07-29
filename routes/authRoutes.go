@@ -12,5 +12,6 @@ func AuthRoutes(r *gin.Engine) {
 		v1.POST("/login", controllers.UserLogin)
 		v1.POST("/forgot-password", controllers.UserForgotPassword)
 		v1.POST("/reset-password", controllers.UserResetPassword)
+		v1.POST("/partner/register", controllers.RegisterPartnerController)
 	}
 }

@@ -13,7 +13,7 @@ type Partner struct {
 	Password    string           `gorm:"not null" json:"password"`
 	Role        UserRole         `gorm:"type:user_role;not null" json:"role"`
 	CreatedAt   time.Time        `gorm:"default:CURRENT_TIMESTAMP" json:"createdAt"`
-	BankDetails BankDetailsModel `gorm:"not null" json:"bank_details"`
+	BankDetails BankDetailsModel `gorm:"embedded" json:"bank_details"`
 }
 
 type BankDetailsModel struct {
