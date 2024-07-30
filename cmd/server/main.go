@@ -24,6 +24,7 @@ func main() {
 	// err := connectDB()
 	routes.AuthRoutes(H)
 	routes.UserRoutes(H)
+	routes.WalletRoutes(H)
 
 	models.ConnectDatabase()
 	fmt.Println("Successfully connected to the database")

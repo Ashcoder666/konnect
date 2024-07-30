@@ -24,7 +24,7 @@ func ConnectDatabase() {
 		panic(err)
 	}
 
-	err = database.AutoMigrate(&User{}, &Tempotps{}, &Partner{})
+	err = database.AutoMigrate(&User{}, &Tempotps{}, &Partner{}, &Wallet{}, &Transaction{})
 
 	if err != nil {
 		panic(err)
