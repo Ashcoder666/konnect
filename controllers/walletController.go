@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/ashcoder666/konnect/services"
@@ -11,7 +12,7 @@ import (
 func CreateWallet(c *gin.Context) {
 
 	type walletInput struct {
-		user_id uuid.UUID
+		UserId uuid.UUID `json:"user_id"`
 	}
 
 	var walletInstance walletInput
@@ -21,7 +22,9 @@ func CreateWallet(c *gin.Context) {
 		return
 	}
 
-	err := services.CreateWallet(walletInstance.user_id)
+	fmt.Println(walletInstance)
+
+	err := services.CreateWallet(walletInstance.UserId)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": "Bad Request Body"})
